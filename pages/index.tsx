@@ -4,38 +4,12 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import FormControl from "@material-ui/core/FormControl";
-
-const WEEKS_IN_YEAR = 52;
-const FULL_TIME_HOURS = 40;
-
-const formatter = new Intl.NumberFormat("en-US", {
-  currency: "USD",
-});
-
-function isNumber(n: any) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-function calculateHourlyFromAnnual(annual: number): string {
-  let hourly = annual / (WEEKS_IN_YEAR * FULL_TIME_HOURS);
-  hourly = Math.ceil(hourly);
-  const hourlyString = formatter.format(hourly);
-  return hourlyString;
-}
-
-const removeFormatting = (s: string) => {
-  let newString = s.replace("$", "");
-  newString = s.replace(",", "");
-  newString = newString.trim();
-  newString = newString.replace(/[^0-9\.]+/g, "");
-  return newString;
-}
-
-function calculateAnnualFromHourly(hourlyRate: number): string {
-  const annual = hourlyRate * WEEKS_IN_YEAR * FULL_TIME_HOURS;
-  const annualString = formatter.format(annual);
-  return annualString;
-}
+import {
+  calculateAnnualFromHourly,
+  calculateHourlyFromAnnual,
+  isNumber,
+  removeFormatting,
+} from "../utils/conversionUtils";
 
 const Home = () => {
   const [hourly, setHourly] = useState("");
@@ -55,7 +29,7 @@ const Home = () => {
 
   const handleHourlyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newHourly = removeFormatting(e.target.value);
-    
+
     setHourly(e.target.value);
     if (isNumber(newHourly)) {
       const annualAmmount = calculateAnnualFromHourly(parseFloat(newHourly));
